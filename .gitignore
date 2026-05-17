@@ -1,0 +1,26 @@
+# FRONTEND
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/*.local
+
+# BACKEND
+backend/.venv/
+backend/app/outputs/
+
+# PYTHON
+__pycache__/
+*.pyc
+
+# ENV
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# SISTEMA
+.DS_Store
+
+# LOGS
+*.log
