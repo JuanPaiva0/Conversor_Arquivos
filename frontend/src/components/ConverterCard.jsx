@@ -58,8 +58,9 @@ export default function ConverterCard({ category}) {
             const link = document.createElement("a");
             link.href = url;
 
+            const name = file.name.split(".")[0];
             const extension = conversionType.split("-").pop();
-            link.download = `arquivo_convertido.${extension}`
+            link.download = `${name}.${extension}`
             document.body.appendChild(link)
 
             link.click()

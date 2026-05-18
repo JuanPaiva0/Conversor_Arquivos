@@ -28,7 +28,7 @@ class ImageService:
         output_path = os.path.join(output_dir, f"{name}.png")
 
         pdf_bytes = await file.read()
-        images =convert_from_bytes(pdf_bytes)
+        images = convert_from_bytes(pdf_bytes)
 
         images[0].save(output_path, "PNG")
 
