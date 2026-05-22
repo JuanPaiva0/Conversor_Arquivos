@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { api } from "../services/api";
+import uploadIcon from "../assets/icons/upload-solid-full.svg"
 
 export default function ConverterCard({ category}) {
     const [file, setFile] = useState(null)
-    const [conversionType, setConversionType] = useState("png-to-pdf")
 
     const conversionOptions = {
         images: [
@@ -24,6 +24,10 @@ export default function ConverterCard({ category}) {
             { value: "xlsx-to-csv", label: "XLSX → CSV" },
         ],
     }
+
+    const [conversionType, setConversionType] = useState(
+        conversionOptions[category][0].value
+    );
 
     useEffect(() => {
         setConversionType(conversionOptions[category][0].value);
@@ -74,35 +78,83 @@ export default function ConverterCard({ category}) {
     };
 
     return (
-        <div className="max-w-xl mx-auto mt-10 p-6 rounded-2xl shadow-md border">
-            <h2 className="text-xl font-bold mb-4">
-                Converter Arquivo
-            </h2>
+    <main className="flex justify-center px-4 mt-6">
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-6">
+        <div className="flex flex-col gap-4">
+          <select
+            value={conversionType}
+            onChange={(e) => setConversionType(e.target.value)}
+            className="
+              w-full
+              p-4
+              rounded-2xl
+              bg-gray-100
+              font-semibold
+              text-center
+              outline-none
+              border-none
+              appearance-none
+              cursor-pointer
+            "
+          >
+            {conversionOptions[category].map((option) => (
+              <option
+                key={option.value}
+                value={option.value}
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+
+          <label
+            className="
+              border-2 border-dashed border-gray-400
+              rounded-2xl
+              h-56
+              flex flex-col items-center justify-center
+              cursor-pointer
+              hover:bg-gray-50
+              transition
+            "
+          >
 
             <input
-                type="file"
-                className="mb-4 w-full"
-                onChange={(e) => setFile(e.target.files[0])}
+              type="file"
+              className="hidden"
+              onChange={(e) => setFile(e.target.files[0])}
             />
 
-            <select
-                className="w-full border rounded-lg p-2 mb-4"
-                value={conversionType}
-                onChange={(e) => setConversionType(e.target.value)}
-            >
-                {conversionOptions[category].map((option) => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </select>
+            <img
+              src={uploadIcon}
+              alt="Upload"
+              className="w-10 h-10 mb-4"
+            />
 
-            <button 
-                className="bg-green-500 max-w-40 rounded-lg p-3 shadow"
-                onClick={handleConvert}
-            >
-                CONVERTER
-            </button>
+            <span className="font-semibold">
+              {file ? file.name : "Upload File"}
+            </span>
+
+          </label>
+
+          <button
+            onClick={handleConvert}
+            className="
+              bg-green-500
+              hover:bg-green-600
+              transition
+              text-white
+              font-bold
+              rounded-2xl
+              py-4
+              mt-2
+              shadow-md
+            "
+          >
+            CONVERTER
+          </button>
         </div>
-    );
+      </div>
+    </main>
+  );
 }
