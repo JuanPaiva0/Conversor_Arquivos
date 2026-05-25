@@ -27,8 +27,6 @@ class DocumentService:
                 f"Erro ao converter TXT para PDF: {str(e)}"
             ) from e
 
-        
-
     async def convert_txt_to_docx(self, file):
         try:
             output_dir = ensure_output_dir()
@@ -48,7 +46,6 @@ class DocumentService:
             raise ConversionError(
                 f"Erro ao converter TXT para DOCX: {str(e)}"
             ) from e
-
 
     async def convert_docx_to_pdf(self, file):
         try:

@@ -6,5 +6,9 @@ def ensure_output_dir():
 
     os.makedirs(output_dir,  exist_ok=True)
     return output_dir
+
+def remove_file(path):
+    if os.path.exists(path):
+        os.remove(path)
     
     
