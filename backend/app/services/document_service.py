@@ -13,10 +13,10 @@ class DocumentService:
         return OUTPUT_DIR
     
     async def convert_txt_to_pdf(self, file):
-        ouptu_dir = self.ensure_output_dir()
+        output_dir = self.ensure_output_dir()
 
         name, _ = os.path.splitext(file.filename)
-        output_path = os.path.join(ouptu_dir, f"{name}.pdf")
+        output_path = os.path.join(output_dir, f"{name}.pdf")
 
         content = (await file.read()).decode("utf-8")
 
