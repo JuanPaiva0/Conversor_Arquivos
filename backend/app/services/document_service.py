@@ -1,4 +1,5 @@
 from app.exceptions.custom_exceptions import ConversionError
+from app.core.utils import ensure_output_dir
 from reportlab.pdfgen import canvas
 from docx import Document
 import os
@@ -6,16 +7,9 @@ import pdfplumber
 import subprocess
 
 class DocumentService:
-    def ensure_output_dir(self):
-        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
-
-        os.makedirs(OUTPUT_DIR, exist_ok=True)
-        return OUTPUT_DIR
-    
     async def convert_txt_to_pdf(self, file):
         try:
-            output_dir = self.ensure_output_dir()
+            output_dir = ensure_output_dir()
 
             name, _ = os.path.splitext(file.filename)
             output_path = os.path.join(output_dir, f"{name}.pdf")
@@ -37,7 +31,7 @@ class DocumentService:
 
     async def convert_txt_to_docx(self, file):
         try:
-            output_dir = self.ensure_output_dir()
+            output_dir = ensure_output_dir()
 
             name, _ = os.path.splitext(file.filename)
             output_path = os.path.join(output_dir, f"{name}.docx")
@@ -58,7 +52,7 @@ class DocumentService:
 
     async def convert_docx_to_pdf(self, file):
         try:
-            output_dir = self.ensure_output_dir()
+            output_dir = ensure_output_dir()
 
             name, _ = os.path.splitext(file.filename)
             input_path = os.path.join(output_dir, file.filename)
@@ -99,7 +93,7 @@ class DocumentService:
 
     async def convert_pdf_to_docx(self, file):
         try:
-            output_dir = self.ensure_output_dir()
+            output_dir = ensure_output_dir()
 
             name, _ = os.path.splitext(file.filename)
 
