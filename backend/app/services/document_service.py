@@ -71,7 +71,10 @@ class DocumentService:
                 check=True,
             )
 
-            return output_path
+            return {
+                "output_path": output_path,
+                "input_path": input_path,
+            }
         
         except subprocess.CalledProcessError as e:
             raise ConversionError(
@@ -111,7 +114,10 @@ class DocumentService:
                             doc.add_paragraph(line)
             
             doc.save(output_path)
-            return output_path
+            return {
+                "output_path": output_path,
+                "input_path": input_path
+            } 
         
         except Exception as e:
             raise ConversionError(
