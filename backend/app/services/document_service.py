@@ -1,3 +1,4 @@
+from app.exceptions.custom_exceptions import ConversionError
 from reportlab.pdfgen import canvas
 from docx import Document
 import os
@@ -13,44 +14,59 @@ class DocumentService:
         return OUTPUT_DIR
     
     async def convert_txt_to_pdf(self, file):
-        output_dir = self.ensure_output_dir()
+        try:
+            output_dir = self.ensure_output_dir()
 
-        name, _ = os.path.splitext(file.filename)
-        output_path = os.path.join(output_dir, f"{name}.pdf")
+            name, _ = os.path.splitext(file.filename)
+            output_path = os.path.join(output_dir, f"{name}.pdf")
 
-        content = (await file.read()).decode("utf-8")
+            content = (await file.read()).decode("utf-8")
 
-        pdf = canvas.Canvas(output_path)
-        pdf.drawString(100, 750, content)
-        pdf.save()
+            pdf = canvas.Canvas(output_path)
+            pdf.drawString(100, 750, content)
+            pdf.save()
 
-        return output_path
+            return output_path
+        
+        except Exception as e:
+            raise ConversionError(
+                f"Erro ao converter TXT para PDF: {str(e)}"
+            ) from e
+
+        
 
     async def convert_txt_to_docx(self, file):
-        output_dir = self.ensure_output_dir()
+        try:
+            output_dir = self.ensure_output_dir()
 
-        name, _ = os.path.splitext(file.filename)
-        output_path = os.path.join(output_dir, f"{name}.docx")
+            name, _ = os.path.splitext(file.filename)
+            output_path = os.path.join(output_dir, f"{name}.docx")
 
-        content = (await file.read()).decode("utf-8")
+            content = (await file.read()).decode("utf-8")
 
-        doc = Document()
-        doc.add_paragraph(content)
-        doc.save(output_path)
+            doc = Document()
+            doc.add_paragraph(content)
+            doc.save(output_path)
 
-        return output_path
+            return output_path
+        
+        except Exception as e:
+            raise ConversionError(
+                f"Erro ao converter TXT para DOCX: {str(e)}"
+            ) from e
+
 
     async def convert_docx_to_pdf(self, file):
-        output_dir = self.ensure_output_dir()
-
-        name, _ = os.path.splitext(file.filename)
-        input_path = os.path.join(output_dir, file.filename)
-        output_path = os.path.join(output_dir, f"{name}.pdf")
-
-        with open(input_path, "wb") as f:
-            f.write(await file.read())
-
         try:
+            output_dir = self.ensure_output_dir()
+
+            name, _ = os.path.splitext(file.filename)
+            input_path = os.path.join(output_dir, file.filename)
+            output_path = os.path.join(output_dir, f"{name}.pdf")
+
+            with open(input_path, "wb") as f:
+                f.write(await file.read())
+
             subprocess.run(
                 [
                     "libreoffice",
@@ -63,32 +79,50 @@ class DocumentService:
                 ],
                 check=True,
             )
-        except subprocess.CalledProcessError:
-            raise Exception("Erro ao converter DOCX para PDF")
 
-
-        return output_path
+            return output_path
+        
+        except subprocess.CalledProcessError as e:
+            raise ConversionError(
+                "Erro ao converter DOCX para PDF"
+            ) from e
+        
+        except FileNotFoundError as e:
+            raise ConversionError(
+                "LibreOffice não encontrado no sistema"
+            ) from e
+        
+        except Exception as e:
+            raise ConversionError(
+                f"Erro ao converter DOCX para PDF: {str(e)}"
+            ) from e
 
     async def convert_pdf_to_docx(self, file):
-        output_dir = self.ensure_output_dir()
+        try:
+            output_dir = self.ensure_output_dir()
 
-        name, _ = os.path.splitext(file.filename)
+            name, _ = os.path.splitext(file.filename)
 
-        input_path = os.path.join(output_dir, file.filename)
-        output_path = os.path.join(output_dir, f"{name}.docx")
+            input_path = os.path.join(output_dir, file.filename)
+            output_path = os.path.join(output_dir, f"{name}.docx")
 
-        with open(input_path, "wb") as f:
-            f.write(await file.read())
+            with open(input_path, "wb") as f:
+                f.write(await file.read())
 
-        doc = Document()
+            doc = Document()
 
-        with pdfplumber.open(input_path) as pdf:
-            for page in pdf.pages:
-                text = page.extract_text()
+            with pdfplumber.open(input_path) as pdf:
+                for page in pdf.pages:
+                    text = page.extract_text()
 
-                if text:
-                    for line in text.splitlines():
-                        doc.add_paragraph(line)
+                    if text:
+                        for line in text.splitlines():
+                            doc.add_paragraph(line)
+            
+            doc.save(output_path)
+            return output_path
         
-        doc.save(output_path)
-        return output_path
+        except Exception as e:
+            raise ConversionError(
+                f"Erro ao converter PDF para DOCX: {str(e)}"
+            ) from e
