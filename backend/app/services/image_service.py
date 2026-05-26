@@ -7,8 +7,9 @@ import os
 
 class ImageService:
     async def convert_png_to_pdf(self, file):
+        validate_extension(file.filename, [".png"])
+        
         try:
-            validate_extension(file.filename, [".png"])
             output_dir = ensure_output_dir()
 
             name, _ = os.path.splitext(file.filename)
@@ -28,8 +29,9 @@ class ImageService:
             )
 
     async def convert_pdf_to_png(self, file):
+        validate_extension(file.filename, [".pdf"])
+
         try:
-            validate_extension(file.filename, [".pdf"])
             output_dir = ensure_output_dir()
 
             name, _ = os.path.splitext(file.filename)
@@ -51,8 +53,9 @@ class ImageService:
             )
         
     async def convert_jpg_to_png(self, file):
+        validate_extension(file.filename, [".jpg", ".jpeg"])
+
         try:
-            validate_extension(file.filename, [".jpg", ".jpeg"])
             output_dir = ensure_output_dir()
 
             name, _ = os.path.splitext(file.filename)        

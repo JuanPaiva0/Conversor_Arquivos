@@ -6,8 +6,9 @@ import os
 
 class SpreadsheetService:
     async def convert_csv_to_xlsx(self, file):
+        validate_extension(file.filename, [".csv"])
+
         try:
-            validate_extension(file.filename, [".csv"])
             output_dir = ensure_output_dir()
 
             name, _ = os.path.splitext(file.filename)
@@ -27,8 +28,9 @@ class SpreadsheetService:
             ) from e
         
     async def convert_xlsx_to_csv(self, file):
+        validate_extension(file.filename, [".xlsx"])
+        
         try:
-            validate_extension(file.filename, [".xlsx"])
             output_dir = ensure_output_dir()
 
             name, _ = os.path.splitext(file.filename)
