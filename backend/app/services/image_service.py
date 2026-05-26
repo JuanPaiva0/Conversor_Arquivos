@@ -1,13 +1,13 @@
-from app.exceptions.custom_exceptions import ConversionError, InvalidFileExtensionError
+from app.exceptions.custom_exceptions import ConversionError
 from app.core.utils import ensure_output_dir
-from app.core.validators import validate_extension
+from app.core.validators import validate_file
 from PIL import Image
 from pdf2image import convert_from_bytes
 import os
 
 class ImageService:
     async def convert_png_to_pdf(self, file):
-        validate_extension(file.filename, [".png"])
+        validate_file(file, "png")
         
         try:
             output_dir = ensure_output_dir()
@@ -20,16 +20,13 @@ class ImageService:
 
             return output_path
         
-        except InvalidFileExtensionError:
-            raise
-        
         except Exception as e:
             raise ConversionError(
                 f"Erro ao converter PNG para PDF: {str(e)}"
             )
 
     async def convert_pdf_to_png(self, file):
-        validate_extension(file.filename, [".pdf"])
+        validate_file(file, "pdf")
 
         try:
             output_dir = ensure_output_dir()
@@ -44,16 +41,13 @@ class ImageService:
 
             return output_path
         
-        except InvalidFileExtensionError:
-            raise
-        
         except Exception as e:
             raise ConversionError(
                 f"Erro ao converter PDF para PNG: {str(e)}"
             )
         
     async def convert_jpg_to_png(self, file):
-        validate_extension(file.filename, [".jpg", ".jpeg"])
+        validate_file(file, "jpg")
 
         try:
             output_dir = ensure_output_dir()
@@ -65,9 +59,6 @@ class ImageService:
             image.convert("RGB").save(output_path)
 
             return output_path
-        
-        except InvalidFileExtensionError:
-            raise
         
         except Exception as e:
             raise ConversionError(

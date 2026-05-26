@@ -1,12 +1,12 @@
-from app.exceptions.custom_exceptions import ConversionError, InvalidFileExtensionError
+from app.exceptions.custom_exceptions import ConversionError
 from app.core.utils import ensure_output_dir
-from app.core.validators import validate_extension
+from app.core.validators import validate_file
 import pandas as pd
 import os
 
 class SpreadsheetService:
     async def convert_csv_to_xlsx(self, file):
-        validate_extension(file.filename, [".csv"])
+        validate_file(file, "csv")
 
         try:
             output_dir = ensure_output_dir()
@@ -19,16 +19,13 @@ class SpreadsheetService:
 
             return output_path
 
-        except InvalidFileExtensionError:
-            raise
-        
         except Exception as e:
             raise ConversionError(
                 f"Erro ao converter CSV para XLSX: {str(e)}"
             ) from e
         
     async def convert_xlsx_to_csv(self, file):
-        validate_extension(file.filename, [".xlsx"])
+        validate_file(file, "xlsx")
         
         try:
             output_dir = ensure_output_dir()
@@ -40,10 +37,7 @@ class SpreadsheetService:
             spreadsheet.to_csv(output_path, index=False)
 
             return output_path
-
-        except InvalidFileExtensionError:
-            raise
-        
+    
         except Exception as e:
             raise ConversionError(
                 f"Erro ao converter XLSX para CSV: {str(e)}"
