@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.exceptions.custom_exceptions import ConversionError
+from app.exceptions.custom_exceptions import ConversionError, InvalidFileExtensionError
 
 from app.routes.image_converter import image_router
 from app.routes.document_converter import document_router
@@ -14,6 +14,13 @@ app = FastAPI(title="Conversor de Arquivos")
 async def conversion_exception_handler(request: Request, exception: ConversionError):
     return JSONResponse(
         status_code=500,
+        content={"detail": str(exception)}
+    )
+
+@app.exception_handler(InvalidFileExtensionError)
+async def invalid_extension_exception_handler(request: Request, exception: InvalidFileExtensionError):
+    return JSONResponse(
+        status_code=400,
         content={"detail": str(exception)}
     )
 

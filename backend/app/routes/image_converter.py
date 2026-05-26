@@ -27,4 +27,3 @@ async def jpg_to_png(background_tasks: BackgroundTasks, file: UploadFile = File(
     background_tasks.add_task(remove_file, output)
 
     return FileResponse(output)
-    
