@@ -1,5 +1,6 @@
-from app.exceptions.custom_exceptions import ConversionError
+from app.exceptions.custom_exceptions import ConversionError, InvalidFileExtensionError
 from app.core.utils import ensure_output_dir
+from app.core.validators import validate_extension
 from reportlab.pdfgen import canvas
 from docx import Document
 import os
@@ -8,6 +9,8 @@ import subprocess
 
 class DocumentService:
     async def convert_txt_to_pdf(self, file):
+        validate_extension(file.filename, [".txt"])
+
         try:
             output_dir = ensure_output_dir()
 
@@ -22,12 +25,17 @@ class DocumentService:
 
             return output_path
         
+        except InvalidFileExtensionError:
+            raise
+        
         except Exception as e:
             raise ConversionError(
                 f"Erro ao converter TXT para PDF: {str(e)}"
             ) from e
 
     async def convert_txt_to_docx(self, file):
+        validate_extension(file.filename, [".txt"])
+
         try:
             output_dir = ensure_output_dir()
 
@@ -42,12 +50,17 @@ class DocumentService:
 
             return output_path
         
+        except InvalidFileExtensionError:
+            raise
+
         except Exception as e:
             raise ConversionError(
                 f"Erro ao converter TXT para DOCX: {str(e)}"
             ) from e
 
     async def convert_docx_to_pdf(self, file):
+        validate_extension(file.filename, [".docx"])
+        
         try:
             output_dir = ensure_output_dir()
 
@@ -76,6 +89,9 @@ class DocumentService:
                 "input_path": input_path,
             }
         
+        except InvalidFileExtensionError:
+            raise
+        
         except subprocess.CalledProcessError as e:
             raise ConversionError(
                 "Erro ao converter DOCX para PDF"
@@ -92,6 +108,8 @@ class DocumentService:
             ) from e
 
     async def convert_pdf_to_docx(self, file):
+        validate_extension(file.filename, [".pdf"])
+
         try:
             output_dir = ensure_output_dir()
 
@@ -119,6 +137,9 @@ class DocumentService:
                 "input_path": input_path
             } 
         
+        except InvalidFileExtensionError:
+            raise
+
         except Exception as e:
             raise ConversionError(
                 f"Erro ao converter PDF para DOCX: {str(e)}"
