@@ -5,7 +5,6 @@ from app.services.spreadsheet_service import SpreadsheetService
 from io import BytesIO
 import pandas as pd
 import pytest
-import os
 
 from app.exceptions.custom_exceptions import (
     InvalidFileExtensionError, 
@@ -131,7 +130,7 @@ class TestSpreadsheetService:
 
         response = await service.convert_xlsx_to_csv(upload_file)
         spreadsheet = pd.read_csv(response)
-        
+
         assert response.endswith(".csv")
         assert len(spreadsheet) == 2
         assert list(spreadsheet.columns) == ["name", "age"]
