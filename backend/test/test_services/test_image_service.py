@@ -260,7 +260,7 @@ class TestImageService:
              await service.convert_jpg_to_png(upload_file)
 
         assert str(exc.value) == (
-            "Extensão inválida. Extensões permitidas: .jpg"
+            "Extensão inválida. Extensões permitidas: .jpg, .jpeg"
         )
 
     @pytest.mark.asyncio
