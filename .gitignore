@@ -6,7 +6,7 @@ frontend/*.local
 
 # BACKEND
 backend/.venv/
-backend/app/outputs/
+backend/outputs/
 
 # PYTHON
 __pycache__/
