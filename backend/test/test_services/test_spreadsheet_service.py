@@ -35,7 +35,12 @@ def xlsx_file():
 class TestSpreadsheetService:
     #TESTS FOR SERVICE convert_csv_to_xlsx
     @pytest.mark.asyncio
-    async def test_csv_to_xlsx_success(self, csv_file):
+    async def test_csv_to_xlsx_success(self, csv_file, mocker):
+        mocker.patch(
+            "app.core.validators.magic.from_buffer",
+            return_value="text/csv"
+        )
+
         csv_content = csv_file
         
         upload_file = UploadFile(
@@ -61,7 +66,7 @@ class TestSpreadsheetService:
             filename="test.txt",
             file=csv_content,
             headers=Headers({
-                "content-type": "text/plain"
+                "content-type": "text/csv"
             })
         )
 
@@ -80,7 +85,7 @@ class TestSpreadsheetService:
             filename="test.csv",
             file=csv_content,
             headers=Headers({
-                "content-type": "text/plain"
+                "content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             })
         )
 
@@ -93,6 +98,11 @@ class TestSpreadsheetService:
 
     @pytest.mark.asyncio
     async def test_csv_to_xlsx_pandas_error(self, csv_file, mocker):
+        mocker.patch(
+            "app.core.validators.magic.from_buffer",
+            return_value="text/csv"
+        )
+
         csv_content = csv_file
 
         upload_file = UploadFile(
