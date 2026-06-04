@@ -25,7 +25,7 @@ export default function Navbar({
   ];
 
   return (
-    <header className="w-full flex justify-center px-4 mt-10">
+    <header className="w-full flex justify-center px-4">
       <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-6">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-extrabold">

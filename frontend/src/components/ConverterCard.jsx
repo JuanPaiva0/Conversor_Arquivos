@@ -29,6 +29,8 @@ export default function ConverterCard({ category}) {
         conversionOptions[category][0].value
     );
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         setConversionType(conversionOptions[category][0].value);
     }, [category])
@@ -38,6 +40,8 @@ export default function ConverterCard({ category}) {
             alert("Selecione um arquivo!")
             return;
         }
+
+        setLoading(true);
 
         try {
             const formData = new FormData();
@@ -72,8 +76,21 @@ export default function ConverterCard({ category}) {
             link.remove()
             window.URL.revokeObjectURL(url)
         } catch (error) {
-            console.error(error);
-            alert("Erro na conversão")
+            let message = "Erro na conversão"
+
+            if (error.response?.data instanceof Blob) {
+              const text = await error.response.data.text();
+
+              try {
+                const json = JSON.parse(text);
+                message = json.detail || message;
+              } catch {
+                message = text;
+              }
+            }
+            alert(message)
+        } finally{
+          setLoading(false)
         }
     };
 
@@ -139,6 +156,7 @@ export default function ConverterCard({ category}) {
 
           <button
             onClick={handleConvert}
+            disabled={loading}
             className="
               bg-green-500
               hover:bg-green-600
@@ -149,9 +167,13 @@ export default function ConverterCard({ category}) {
               py-4
               mt-2
               shadow-md
+
+              disabled:bg-green-700
+              disabled:cursor-not-allowed
+              disabled:opacity-70
             "
           >
-            CONVERTER
+            {loading ? "CONVERTENDO..." : "CONVERTER"}
           </button>
         </div>
       </div>

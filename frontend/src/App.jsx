@@ -6,15 +6,15 @@ function App() {
   const [activeSection, setActiveSection] = useState("images")
 
   return (
-    <div className="min-h-screen bg-gray-200">
+    <div className="bg-gray-200 min-h-screen flex items-center justify-center">
+      <div className="w-full">
+        <Navbar
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+        />
 
-      <Navbar
-        activeSection={activeSection}
-        setActiveSection={setActiveSection}
-      />
-
-      <Home activeSection={activeSection} />
-
+        <Home activeSection={activeSection} />
+      </div>
     </div>
   );
 }
