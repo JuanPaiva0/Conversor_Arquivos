@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { toast } from "sonner";
 import { api } from "../services/api";
 import uploadIcon from "../assets/icons/upload-solid-full.svg"
 
 export default function ConverterCard({ category}) {
-    const [file, setFile] = useState(null)
+    const [file, setFile] = useState(null);
+    const fileInputRef = useRef(null);
 
     const conversionOptions = {
         images: [
@@ -32,12 +34,20 @@ export default function ConverterCard({ category}) {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setConversionType(conversionOptions[category][0].value);
+        setFile(null);
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+
+        setConversionType(
+          conversionOptions[category][0].value
+        );
     }, [category])
 
     const handleConvert = async () => {
         if (!file) {
-            alert("Selecione um arquivo!")
+            toast.warning("Selecione um arquivo!")
             return;
         }
 
@@ -75,6 +85,14 @@ export default function ConverterCard({ category}) {
 
             link.remove()
             window.URL.revokeObjectURL(url)
+
+            toast.success("Arquivo convertido com sucesso!")
+
+            setFile(null);
+
+            if (fileInputRef.current) {
+              fileInputRef.current.value = "";
+            }
         } catch (error) {
             let message = "Erro na conversão"
 
@@ -88,7 +106,7 @@ export default function ConverterCard({ category}) {
                 message = text;
               }
             }
-            alert(message)
+            toast.error(message)
         } finally{
           setLoading(false)
         }
@@ -137,6 +155,7 @@ export default function ConverterCard({ category}) {
           >
 
             <input
+              ref={fileInputRef}
               type="file"
               className="hidden"
               onChange={(e) => setFile(e.target.files[0])}
