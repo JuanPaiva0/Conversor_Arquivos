@@ -1,5 +1,5 @@
 from app.exceptions.custom_exceptions import ConversionError
-from app.core.utils import ensure_output_dir
+from app.core.utils import ensure_output_dir, get_output_path, get_input_path
 from app.core.validators import validate_file
 from reportlab.pdfgen import canvas
 from docx import Document
@@ -13,9 +13,7 @@ class DocumentService:
 
         try:
             output_dir = ensure_output_dir()
-
-            name, _ = os.path.splitext(file.filename)
-            output_path = os.path.join(output_dir, f"{name}.pdf")
+            output_path = get_output_path(file, output_dir, "pdf")
 
             content = (await file.read()).decode("utf-8")
 
@@ -35,9 +33,7 @@ class DocumentService:
 
         try:
             output_dir = ensure_output_dir()
-
-            name, _ = os.path.splitext(file.filename)
-            output_path = os.path.join(output_dir, f"{name}.docx")
+            output_path = get_output_path(file, output_dir, "docx")
 
             content = (await file.read()).decode("utf-8")
 
@@ -57,10 +53,8 @@ class DocumentService:
 
         try:
             output_dir = ensure_output_dir()
-
-            name, _ = os.path.splitext(file.filename)
-            input_path = os.path.join(output_dir, file.filename)
-            output_path = os.path.join(output_dir, f"{name}.pdf")
+            input_path = get_input_path(file, output_dir)
+            output_path = get_output_path(file, output_dir, "pdf")
 
             with open(input_path, "wb") as f:
                 f.write(await file.read())
@@ -103,11 +97,8 @@ class DocumentService:
 
         try:
             output_dir = ensure_output_dir()
-
-            name, _ = os.path.splitext(file.filename)
-
-            input_path = os.path.join(output_dir, file.filename)
-            output_path = os.path.join(output_dir, f"{name}.docx")
+            input_path = get_input_path(file, output_dir)
+            output_path = get_output_path(file, output_dir, "docx")
 
             with open(input_path, "wb") as f:
                 f.write(await file.read())

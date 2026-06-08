@@ -1,5 +1,5 @@
 from app.exceptions.custom_exceptions import ConversionError
-from app.core.utils import ensure_output_dir
+from app.core.utils import ensure_output_dir, get_output_path
 from app.core.validators import validate_file
 import pandas as pd
 import os
@@ -10,9 +10,7 @@ class SpreadsheetService:
 
         try:
             output_dir = ensure_output_dir()
-
-            name, _ = os.path.splitext(file.filename)
-            output_path = os.path.join(output_dir, f"{name}.xlsx")
+            output_path = get_output_path(file, output_dir, "xlsx")
 
             spreadsheet = pd.read_csv(file.file)
             spreadsheet.to_excel(output_path, index=False)
@@ -29,9 +27,7 @@ class SpreadsheetService:
         
         try:
             output_dir = ensure_output_dir()
-
-            name, _ = os.path.splitext(file.filename)
-            output_path = os.path.join(output_dir, f"{name}.csv")
+            output_path = get_output_path(file, output_dir, "csv")
 
             spreadsheet = pd.read_excel(file.file)
             spreadsheet.to_csv(output_path, index=False)

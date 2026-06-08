@@ -1,5 +1,5 @@
 from app.exceptions.custom_exceptions import ConversionError
-from app.core.utils import ensure_output_dir
+from app.core.utils import ensure_output_dir, get_output_path
 from app.core.validators import validate_file
 from PIL import Image
 from pdf2image import convert_from_bytes
@@ -11,9 +11,7 @@ class ImageService:
         
         try:
             output_dir = ensure_output_dir()
-
-            name, _ = os.path.splitext(file.filename)
-            output_path = os.path.join(output_dir, f"{name}.pdf")
+            output_path = get_output_path(file, output_dir, "pdf")
 
             image = Image.open(file.file)
             image.convert("RGB").save(output_path)
@@ -30,9 +28,7 @@ class ImageService:
 
         try:
             output_dir = ensure_output_dir()
-
-            name, _ = os.path.splitext(file.filename)
-            output_path = os.path.join(output_dir, f"{name}.png")
+            output_path = get_output_path(file, output_dir, "png")
 
             pdf_bytes = await file.read()
             images = convert_from_bytes(pdf_bytes)
@@ -51,9 +47,7 @@ class ImageService:
 
         try:
             output_dir = ensure_output_dir()
-
-            name, _ = os.path.splitext(file.filename)        
-            output_path = os.path.join(output_dir, f"{name}.png")
+            output_path = get_output_path(file, output_dir, "png")
 
             image = Image.open(file.file)
             image.convert("RGB").save(output_path)
