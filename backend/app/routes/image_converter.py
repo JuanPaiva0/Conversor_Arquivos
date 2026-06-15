@@ -20,7 +20,6 @@ async def pdf_to_png(background_tasks: BackgroundTasks, file: UploadFile = File(
 
     return FileResponse(output)
 
-
 @image_router.post("/jpg-to-png")
 async def jpg_to_png(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
     output = await service.convert_jpg_to_png(file)

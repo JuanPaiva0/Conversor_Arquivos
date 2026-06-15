@@ -2,6 +2,7 @@ from pathlib import Path
 import magic
 from fastapi import UploadFile
 
+from app.core.config import settings
 from app.exceptions.custom_exceptions import (
     InvalidFileExtensionError,
     InvalidMimeTypeError,
@@ -9,7 +10,7 @@ from app.exceptions.custom_exceptions import (
     MissingFilenameError
 )
 
-MAX_FILE_SIZE = 10 * 1024 * 1024 # 10 MB
+MAX_FILE_SIZE = settings.max_file_size
 
 ALLOWED_FILE_TYPES = {
     "png": {

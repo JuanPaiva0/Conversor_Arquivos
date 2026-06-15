@@ -13,8 +13,6 @@ async def csv_to_xlsx(background_tasks: BackgroundTasks, file: UploadFile = File
 
     return FileResponse(output)
     
-    
-
 @spreadsheet_router.post("/xlsx-to-csv")
 async def xlsx_to_csv(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
     output = await service.convert_xlsx_to_csv(file)
